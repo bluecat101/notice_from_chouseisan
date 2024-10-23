@@ -14,6 +14,10 @@ VOTE_DATA_FILE = "voteData.yml"
 def create_vote_deta(url, period, send_notification = True, send_notification_at_night = False):
   if url is None or period is None:
     return
+  if type(period) is str: # 型変換
+    period = datetime.datetime.strptime(period, "%Y-%m-%d").date()
+  elif not(type(period) is datetime.date): # datetime型以外ならreturn
+    return
   with open(VOTE_DATA_FILE, 'r') as yml:
     vote_data = yaml.safe_load(yml)
   if url in vote_data:
