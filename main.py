@@ -5,6 +5,8 @@ import sys
 from bs4 import BeautifulSoup
 import re
 import yaml
+import slack
+
 
 VOTE_DATA_FILE = "voteData.yml"
 
@@ -77,7 +79,11 @@ def comfirm_vote_data(url="", vote_data={}):
   members = table_data["event"]["members"]
   new_voted_member = list(map(lambda member: member["name"],members[-new_voted_num:]))
   update_vote_data(url, {"voted_num": voted_num})
-  print(new_voted_member)
+  message = f"""
+  {"さんと".join(new_voted_member)}さんが投票してくれました。
+  {url}
+  """
+  slack.send_message(message)
   
 def check_period():
   with open(VOTE_DATA_FILE, 'r') as yml:
