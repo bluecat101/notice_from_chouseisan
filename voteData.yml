@@ -1,0 +1,5 @@
+https://chouseisan.com/hoge:
+  period: 2100-12-31 # いつまで通知を送り続けるか
+  voted_num: 15 # 現在の投票人数
+  send_notification: True # 通知を送るかどうか(Trueなら送る)
+  send_notification_at_night: False # 深夜(00:00-8:00)に通知を送るかどうか(Trueなら送らない)
