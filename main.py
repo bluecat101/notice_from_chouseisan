@@ -11,7 +11,7 @@ import slack
 VOTE_DATA_FILE = "voteData.yml"
 
 # periodの形式はyyyy-mm-ddとする
-def create_vote_deta(url, period):
+def create_vote_deta(url, period, send_notification = True, send_notification_at_night = False):
   if url is None or period is None:
     return
   with open(VOTE_DATA_FILE, 'r') as yml:
@@ -100,8 +100,8 @@ if __name__ == "__main__":
   check_period()
   with open(VOTE_DATA_FILE, 'r') as yml:
     vote_data = yaml.safe_load(yml)
-  if len(args) == 3:
-    create_vote_deta(args[1], args[2])
+  if len(args) == 5:
+    create_vote_deta(args[1], args[2], args[3], args[4])
   elif len(args) == 1:
     for url in vote_data.keys():
       comfirm_vote_data(url, vote_data[url])
