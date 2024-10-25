@@ -49,7 +49,7 @@ def create_vote_deta(url, period, send_notification = True, send_notification_at
   if not(name in name_list):
     kakasi = pykakasi.kakasi() # 英語表記にする
     name_at_roman = kakasi.convert(name)[0]["passport"]
-    name_member_slack_id_key = name_at_roman.upper() + "_SLACK_ID" # slack_idを呼ぶためのkey名
+    name_member_slack_id_key = name_at_roman.upper() + "_SLACK_MEMBER_ID" # slack_idを呼ぶためのkey名
     name_to_slack_id[name] = name_member_slack_id_key
     # 名前を追加
     with open(NAME_TO_SLACK_ID_FILE, 'w') as yml:
