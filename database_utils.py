@@ -27,8 +27,8 @@ def create_vote_deta(url, period, send_notification = True, send_notification_at
   data = {url:{
     'period': period, 
     'voted_num': 0,
-    'is_send_notification': True,
-    'is_send_notification_at_night': False,
+    'is_send_notification': send_notification,
+    'is_send_notification_at_night': send_notification_at_night,
     'to': name
     }}
   # voteData.ymlに追加
