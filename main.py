@@ -9,7 +9,7 @@ import config
 import database_utils
 
 # slack_idはないときもある
-def create_vote_deta(url, period, send_notification = True, send_notification_at_night = False,name = None, slack_id=None):
+def create_vote_deta(url, period, send_notification = True, send_notification_at_night = False, name = None, slack_id=None):
   # 作成できたらTrue, 作成できなかったらFlase(urlがすでにあった場合にもFlase)
   if database_utils.create_vote_deta(url, period, send_notification, send_notification_at_night, name):
     # name_list.ymlに送信先の人が初めての人ならばslack_idを参照するkeyを追加する
@@ -64,19 +64,26 @@ def check_period():
     if value["period"] < today:
       database_utils.delete_vote_deta(url)
   
-# slackでデータを送る
 
+# routeingの役割
 if __name__ == "__main__":
   args = sys.argv # 引数確認
   check_period()
-  vote_data = database_utils.get_vote_data()
-  if len(args) == 6:
-    create_vote_deta(args[1], args[2], args[3], args[4], args[5])
-  elif len(args) == 7:
-    create_vote_deta(args[1], args[2], args[3], args[4], args[5], args[6])
-  elif len(args) == 1:
+  if len(args) == 1: # 投票に更新があるかを確認する
+    vote_data = database_utils.get_vote_data()
     for url in vote_data.keys():
       comfirm_vote_data(url, vote_data[url])
+  elif len(args) > 2:
+    if args[1] == "get_name_list":
+      print(list(database_utils.get_name_to_slack_id_data().keys()))
+    elif args[1] == "get_vote_data":
+      print(database_utils.get_vote_data())
+    elif args[1] == "update_vote_data":
+      print(database_utils.update_vote_data())
+    elif args[1] == "delete_vote_data":
+      database_utils.delete_vote_deta()
+    elif args[1] == "create_vote_data":
+      create_vote_deta(args[2], args[3], args[4], args[5], *args[6:])
   else:
     exit("引数の数が異なります。")
     
