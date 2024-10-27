@@ -19,7 +19,12 @@ def create_vote_deta(url, period, send_notification = True, send_notification_at
       # envファイルに追加
       config.set_key(slack_member_id_key, slack_id)
 
-
+# json型に変換するためにdatetimeを文字列にする
+def to_json(data):
+  if isinstance(data, dict):
+    for key, value in data.items():
+      data[key]["period"] = data[key]["period"].strftime("%Y-%m-%d")
+  return json.dumps(data)
 
 # urlのデータを取得する
 def get_url_data(url=""):
@@ -68,23 +73,28 @@ def check_period():
 # routeingの役割
 if __name__ == "__main__":
   args = sys.argv # 引数確認
+  # 引数が16進数の時があるためエンコードしてデコードする
+  args_bytes = " ".join(args).encode('utf-8')
+  args = bytes(args_bytes).decode("utf-8").split(" ")
+  args_len = len(args)
   check_period()
-  if len(args) == 1: # 投票に更新があるかを確認する
+  if args_len == 1: # 投票に更新があるかを確認する
     vote_data = database_utils.get_vote_data()
     for url in vote_data.keys():
       comfirm_vote_data(url, vote_data[url])
-  elif len(args) > 2:
-    if args[1] == "get_name_list":
-      print(list(database_utils.get_name_to_slack_id_data().keys()))
-    elif args[1] == "get_vote_data":
-      print(database_utils.get_vote_data())
-    elif args[1] == "update_vote_data":
-      print(database_utils.update_vote_data())
-    elif args[1] == "delete_vote_data":
-      database_utils.delete_vote_deta()
-    elif args[1] == "create_vote_data":
-      create_vote_deta(args[2], args[3], args[4], args[5], *args[6:])
   else:
-    exit("引数の数が異なります。")
+    if args[1] == "get_name_list" and args_len == 2:
+      print(list(database_utils.get_name_to_slack_id_data().keys()))
+    elif args[1] == "get_vote_data" and args_len == 2:
+      print(to_json(database_utils.get_vote_data()))
+    elif args[1] == "update_vote_data" and args_len == 2:
+      database_utils.update_vote_data(url, json.loads(args[2]))
+    elif args[1] == "delete_vote_data" and args_len == 2:
+      database_utils.delete_vote_deta(args[2])
+    elif args[1] == "create_vote_data" and (args_len == 6 or args_len == 7):
+      create_vote_deta(args[2], args[3], args[4], args[5], *args[6:])
+    else: 
+      exit("引数を確認してください。")  
+    
     
     

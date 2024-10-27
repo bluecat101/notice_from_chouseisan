@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/front/main.css" rel="stylesheet" />
-    <script src="/front/main.js"></script>
+    <!-- <script src="main.js"></script> -->
+    <script type="module" src="/front/main.js"></script>
+
 
     <title>調整さんの通知管理サイト</title>
 </head>
@@ -16,6 +18,7 @@
       <td>期限</td>
       <td>通知ON</td>
       <td>深夜の通知ON</td>
+      <td>通知の送り先</td>
       <td></td>
       </tr>
     </thead>
@@ -26,6 +29,7 @@
         <td><input type="date" id="period" name="period" required value="2200-02-22"/></td>
         <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
         <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
+        <td><input type="text" id="name" name="name" required size="10" placeholder="XXXXXXXX" value="xxxxx"/></td>
         <td><input type="submit" value="登録"></td>
         </form>
         </tr>  

@@ -3,11 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const querystring = require('querystring');
+const api = require('./api.js');
 
 
 const server = http.createServer();
 let filePath;
-server.on("request", function (req, res) {
+server.on("request", async function (req, res) {
   filePath = "";
   if (req.method === 'GET' && req.url === '/') {
     filePath = path.join(__dirname, 'front/main.html');
@@ -15,6 +16,8 @@ server.on("request", function (req, res) {
     filePath = path.join(__dirname, 'front/main.css');
   } else if (req.method === 'GET' && req.url === '/front/main.js') {
     filePath = path.join(__dirname, 'front/main.js');
+  }else if (req.method === 'GET' && req.url === '/api.js') {
+    filePath = path.join(__dirname, 'api.js');
   } else if (req.method === 'POST' && req.url === '/front/submit') {
     let body = '';
 
@@ -31,8 +34,9 @@ server.on("request", function (req, res) {
       const period = params["period"]
       const notice = ("notice" in params)? true: false
       const noticeAtNight = ("notice-at-night" in params)? true: false
+      const name = params["name"]
 
-      const pythonProcess = spawn('python', ['main.py', url, period, notice, noticeAtNight]); // 作成
+      const pythonProcess = spawn('python', ['main.py', url, period, notice, noticeAtNight, name]); // 作成
         let output;
         pythonProcess.stdout.on('data', (data) => {
           output = data
@@ -43,11 +47,7 @@ server.on("request", function (req, res) {
           res.writeHead(303, { 'Location': '/' });
           res.end(); // レスポンスを終了
         })
-
-      
-      
     })
-    // return
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Page not found');
@@ -59,7 +59,13 @@ server.on("request", function (req, res) {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.end('Internal Server Error');
       } else {
-        res.writeHead(200, { 'Content-Type': `text/${filePath.split(".").pop()}` });
+        extension = filePath.split(".").pop()
+        if(extension == "js"){
+          res.writeHead(200, { 'Content-Type': `text/javascript` });
+        }else{
+          res.writeHead(200, { 'Content-Type': `text/${extension}` });
+        }
+        
         res.end(data);
       }
     });
