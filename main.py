@@ -64,6 +64,8 @@ def comfirm_vote_data(url="", vote_data={}):
   
 def check_period():
   vote_data = database_utils.get_vote_data()
+  if not(isinstance(vote_data, dict)):
+    return False
   for url, value in vote_data.items():
     today = datetime.date.today()
     if value["period"] < today:

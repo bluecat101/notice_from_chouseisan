@@ -19,6 +19,7 @@
       <td>通知ON</td>
       <td>深夜の通知ON</td>
       <td>通知の送り先</td>
+      <td>送り先のslack_id(新規の場合のみ)</td>
       <td></td>
       </tr>
     </thead>
@@ -29,6 +30,7 @@
         <td><input type="date" id="period" name="period" required value="2200-02-22"/></td>
         <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
         <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
+        <td><div id="name_container"></div></td>
         <td><input type="text" id="name" name="name" required size="10" placeholder="XXXXXXXX" value="xxxxx"/></td>
         <td><input type="submit" value="登録"></td>
         </form>
@@ -36,25 +38,17 @@
     </tbody>
   </table>
 
-  <table>
+  <table id="index">
     <thead>
       <tr>
       <td>URL</td>
       <td>期限</td>
       <td>通知ON</td>
       <td>深夜の通知ON</td>
-      <td></td>
+      <td>通知の送信者</td>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td></td>
-        <td></td>
-        <td><div class="toggle_button"><input id="toggle" class="toggle_input" type='checkbox' checked/><label for="toggle" class="toggle_label"></div></td>
-        <td><div class="toggle_button"><input id="toggle" class="toggle_input" type='checkbox' /><label for="toggle" class="toggle_label"></div></td>
-        <td><button>削除</button></td>
-        </tr>
-    </tbody>
+    <tbody></tbody>
   </table>
 </body>
 </html>

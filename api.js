@@ -27,7 +27,8 @@ const getNameList = (async ()=>{
     const pythonProcess = spawn('python', ['main.py', "get_name_list"]); // 作成
     pythonProcess.stdout.on('data', (data) => {
       data = decodeData(data)
-      resolve(data.substring(1,decodeData.length).split(",")); // デコードして結果を返す
+      data = data.replace(/'/g, '"');
+      resolve(JSON.parse(data)); // デコードして結果を返す
     });
     // エラーがあった際に表示する
     pythonProcess.stderr.on('data', (data) => {
