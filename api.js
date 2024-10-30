@@ -24,7 +24,7 @@ const getVoteData = (async ()=>{
 const getNameList = (async ()=>{
   // Promiseを使わないと処理中状態でreturnすることになるため使用する
   return new Promise(async (resolve) => {
-  const pythonProcess = spawn('python', ['main.py', "get_name_list"]); // 作成
+    const pythonProcess = spawn('python', ['main.py', "get_name_list"]); // 作成
     pythonProcess.stdout.on('data', (data) => {
       data = decodeData(data)
       resolve(data.substring(1,decodeData.length).split(",")); // デコードして結果を返す
@@ -37,4 +37,21 @@ const getNameList = (async ()=>{
   })
 })
 
+const updateData =(async (url, keyValueJson)=>{
+  const pythonProcess = await spawn('python', ['main.py', "update_vote_data", url, JSON.stringify(keyValueJson)]); // 作成
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(decodeData(data));
+  });
+})
+
+const deleteData =(async (url)=>{
+  const pythonProcess = await spawn('python', ['main.py', "delete_vote_data", url]); // 作成
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(decodeData(data));
+  });
+})
+
+const createData = (async (url, period, notice, noticeAtNight, name, slackID)=>{
+  const pythonProcess = await spawn('python', ['main.py', url, period, notice, noticeAtNight, name, slackID]); // 作成
+})
 module.exports = {getNameList, getVoteData, updateData, deleteData, createData};

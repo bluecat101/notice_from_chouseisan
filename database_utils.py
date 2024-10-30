@@ -55,11 +55,15 @@ def update_vote_data(url=None, args={}): # argsは辞書型
 
 def delete_vote_deta(url=None):
   if url is None:
-    return
+    return False
   vote_data = get_vote_data()
-  del vote_data[url] # 削除
+  if url in vote_data: # urlが存在するかどうか
+    del vote_data[url] # 削除
+  else:
+    return False
   with open(VOTE_DATA_FILE, 'wb') as yml:
-    yaml.dump(vote_data, yml, encoding='utf-8', allow_unicode=True)
+    if len(vote_data) != 0: # 辞書がからでないなら記入。空なら何もしなければ空ファイルとなる
+      yaml.dump(vote_data, yml, encoding='utf-8', allow_unicode=True)
   return True
   
 ### name_list.yml ###
