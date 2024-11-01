@@ -7,14 +7,6 @@ const api = require('./api.js');
 
 
 const server = http.createServer();
-const receiveData=((req)=>{
-  let body = '';
-  // データを受信
-  req.on('data', chunk => {
-    body += chunk.toString(); // バイナリデータを文字列に変換
-  });
-  return body;
-})
 
 let filePath;
 server.on("request", async function (req, res) {
@@ -36,7 +28,11 @@ server.on("request", async function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(data));
   }else if (req.method === 'DELETE' && req.url === '/') {
-    const body = receiveData(req);
+    let body = '';
+    // データを受信
+    req.on('data', chunk => {
+      body += chunk.toString(); // バイナリデータを文字列に変換
+    });
 
     req.on('end', async () => {
       try {
@@ -57,7 +53,11 @@ server.on("request", async function (req, res) {
       }
     });
   }else if (req.method === 'PATCH' && req.url === '/') {
-    const body = receiveData(req);
+    let body = '';
+    // データを受信
+    req.on('data', chunk => {
+      body += chunk.toString(); // バイナリデータを文字列に変換
+    });
 
     req.on('end', async () => {
       try {
@@ -79,8 +79,12 @@ server.on("request", async function (req, res) {
       }
     });
   }else if (req.method === 'POST' && req.url === '/') {
-    const body = receiveData(req);
-    
+    let body = '';
+    // データを受信
+    req.on('data', chunk => {
+      body += chunk.toString(); // バイナリデータを文字列に変換
+    });
+
     // データの受信が完了したとき
     req.on('end', async() => {
       try {
