@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/front/main.css" rel="stylesheet" />
-    <!-- <script src="main.js"></script> -->
     <script type="module" src="/front/main.js"></script>
 
 
@@ -27,18 +26,19 @@
     </thead>
     <tbody>
       <tr>
-        <form action="/" method="post" class="form-example">
-        <td><input type="text" id="url" name="url" required size="40" placeholder="https://chouseisan.com/..." value="test"/></td>
-        <td><input type="date" id="period" name="period" required value="2200-02-22"/></td>
-        <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
-        <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
-        <td><div id="name_container">
-          <select name="name" id="select_name">
-          </select>
-        </div></td>
-        <td><input type="text" id="td-newName" name="newName" size="10" placeholder="山田" style="display:none;"/></td>
-        <td><input type="text" id="td-slackId" name="slackId" size="10" placeholder="XXXXXXXX" style="display:none;"/></td>
-        <td><input type="submit" value="登録"></td>
+        <form class="form-example" id="from">
+          <td><input type="text" id="url" name="url" required size="40" placeholder="https://chouseisan.com/..." value="test"/></td>
+          <td><input type="date" id="period" name="period" required value="2200-02-22"/></td>
+          <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
+          <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
+          <td><div id="name_container">
+            <select name="name" id="select_name">
+            </select>
+          </div></td>
+          <td><input type="text" id="td-newName" name="newName" size="10" placeholder="山田" style="display:none;"/></td>
+          <td><input type="text" id="td-slackId" name="slackId" size="10" placeholder="XXXXXXXX" style="display:none;"/></td>
+          <!-- <td><input type="submit" value="登録" id="submit"></td> -->
+          <td><button type="button" id="submit">登録</button></td>
         </form>
         </tr>  
     </tbody>

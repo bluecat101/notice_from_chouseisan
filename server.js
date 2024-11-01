@@ -1,7 +1,6 @@
 const http = require("http");
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
 const querystring = require('querystring');
 const api = require('./api.js');
 
@@ -88,18 +87,26 @@ server.on("request", async function (req, res) {
     // データの受信が完了したとき
     req.on('end', async() => {
       try {
-        // 受け取ったデータをパース
-        const params = querystring.parse(body);
-        const url = params["url"]
-        const period = params["period"]
-        const notice = ("notice" in params)? true: false
-        const noticeAtNight = ("notice-at-night" in params)? true: false
-        let name = params["name"]
-        let slackId;
+        // 受信したボディをJSONにパース
+        const parsedBody = JSON.parse(body);
+        const url = parsedBody.url;
+        const period = parsedBody.period;
+        const notice = parsedBody.notice;
+        const noticeAtNight = parsedBody.noticeAtNight;
+        const name = parsedBody.name;
+        const newName = parsedBody.newName;
+        const slackId = parsedBody.slackId;
+
+        const voteData = await api.getVoteData();
+        if(Object.keys(voteData).includes(url)){
+          console.log("すでに登録されています")
+          res.writeHead(409, { 'Location': '/' });
+          res.end("すでに登録されています");
+          return;
+        }
+
         if(name=="その他"){
-          name = params["newName"]
-          slackId = params["slackId"]
-          await api.createData(url, period, notice, noticeAtNight, name, slackId);
+          await api.createData(url, period, notice, noticeAtNight, newName, slackId);
         }else{
           await api.createData(url, period, notice, noticeAtNight, name);
         }

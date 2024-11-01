@@ -91,7 +91,6 @@ if __name__ == "__main__":
     elif args[1] == "get_vote_data" and args_len == 2:
       print(to_json(database_utils.get_vote_data()))
     elif args[1] == "update_vote_data" and args_len == 4:
-      # exit(json.loads(args[3]))
       database_utils.update_vote_data(args[2], json.loads(args[3]))
     elif args[1] == "delete_vote_data" and args_len == 3:
       database_utils.delete_vote_data(args[2])

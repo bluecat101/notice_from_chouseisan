@@ -66,6 +66,39 @@ const updateVoteData = (async(url, updatedKeyValue)=>{
   }
 })
 
+// 作成する関数
+const createVoteData = (async()=>{
+  const form = document.getElementById("from");
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());  // フォームのデータをJSON形式に変換
+  const url = data["url"];
+  const period = data["period"];
+  const notice = ("notice" in data)? true: false;
+  const noticeAtNight = ("notice-at-night" in data)? true: false;
+  const name = data["name"];
+  const newName = data["newName"];
+  const slackId = data["slackId"];
+  try {
+    const response = await fetch("http://127.0.0.1:8080/", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({url: url,period: period, notice: notice, noticeAtNight: noticeAtNight, name: name, newName: newName, slackId: slackId}),
+    });
+
+    if (response.ok) {
+      window.location.href = '/'; 
+    } else {
+      alert("既に登録されています。");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})
+
+
+
 
 // 一覧部分の作成
 const createIndex =(()=>{
@@ -150,6 +183,7 @@ const main =(async ()=>{
   nameList = await fetchNameList();
   createIndex();
   setNameListAsOption();
+  document.getElementById("submit").addEventListener("click",()=>{createVoteData()})
 })
 
 main();
