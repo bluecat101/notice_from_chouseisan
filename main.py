@@ -7,6 +7,7 @@ import re
 
 import config
 import database_utils
+import slack
 
 # slack_idはないときもある
 def create_vote_data(url, period, send_notification = True, send_notification_at_night = False, name = None, slack_id=None):

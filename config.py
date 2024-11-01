@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import dotenv
 
+load_dotenv()
 ### Slack用 ###
 # Slackへの送信用のトークン
 SLACK_API_TOKEN = os.getenv("SLACK_API_TOKEN")
