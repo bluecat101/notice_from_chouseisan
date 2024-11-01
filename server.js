@@ -7,6 +7,15 @@ const api = require('./api.js');
 
 
 const server = http.createServer();
+const receiveData=((req)=>{
+  let body = '';
+  // データを受信
+  req.on('data', chunk => {
+    body += chunk.toString(); // バイナリデータを文字列に変換
+  });
+  return body;
+})
+
 let filePath;
 server.on("request", async function (req, res) {
   filePath = "";
@@ -27,12 +36,7 @@ server.on("request", async function (req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(data));
   }else if (req.method === 'DELETE' && req.url === '/') {
-    let body = '';
-    
-    // データを受信
-    req.on('data', chunk => {
-      body += chunk.toString(); // バイナリデータを文字列に変換
-    });
+    const body = receiveData(req);
 
     req.on('end', async () => {
       try {
@@ -42,7 +46,7 @@ server.on("request", async function (req, res) {
         // APIのデータ削除関数を呼び出し
         await api.deleteData(url);
 
-        // 成功レスポンス
+        // ルートにリダイレクトする
         res.writeHead(303, { 'Location': '/' });
         res.end();
       } catch (error) {
@@ -53,40 +57,30 @@ server.on("request", async function (req, res) {
       }
     });
   }else if (req.method === 'PATCH' && req.url === '/') {
-  let body = '';
-  
-  // データを受信
-  req.on('data', chunk => {
-    body += chunk.toString(); // バイナリデータを文字列に変換
-  });
+    const body = receiveData(req);
 
-  req.on('end', async () => {
-    try {
-      // 受信したボディをJSONにパース
-      const parsedBody = JSON.parse(body);
-      const url = parsedBody.url;
-      const keyValue = parsedBody.keyValue;
-      // APIのデータ削除関数を呼び出し
-      await api.updateData(url,keyValue);
+    req.on('end', async () => {
+      try {
+        // 受信したボディをJSONにパース
+        const parsedBody = JSON.parse(body);
+        const url = parsedBody.url;
+        const keyValue = parsedBody.keyValue;
+        // データ削除
+        await api.updateData(url,keyValue);
 
-      // 成功レスポンス
-      res.writeHead(303, { 'Location': '/' });
-      res.end();
-    } catch (error) {
-      // エラーハンドリング
-      console.error("Error parsing JSON or deleting data:", error);
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('Server error');
-    }
-  });
-  }else if (req.method === 'POST' && req.url === '/front/submit') {
-    let body = '';
-
-    // POSTデータを受信する
-    req.on('data', chunk => {
-      body += chunk.toString(); // バイナリデータを文字列に変換
+        // ルートに遷移する
+        res.writeHead(303, { 'Location': '/' });
+        res.end();
+      } catch (error) {
+        // エラーハンドリング
+        console.error("Error parsing JSON or deleting data:", error);
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('Server error');
+      }
     });
-
+  }else if (req.method === 'POST' && req.url === '/') {
+    const body = receiveData(req);
+    
     // データの受信が完了したとき
     req.on('end', async() => {
       try {
@@ -96,10 +90,17 @@ server.on("request", async function (req, res) {
         const period = params["period"]
         const notice = ("notice" in params)? true: false
         const noticeAtNight = ("notice-at-night" in params)? true: false
-        const name = params["name"]
-        await api.createData(url, period, notice, noticeAtNight, name);
-  
-        // 成功レスポンス
+        let name = params["name"]
+        let slackId;
+        if(name=="その他"){
+          name = params["newName"]
+          slackId = params["slackId"]
+          await api.createData(url, period, notice, noticeAtNight, name, slackId);
+        }else{
+          await api.createData(url, period, notice, noticeAtNight, name);
+        }
+        
+        // ルートにリダイレクトする
         res.writeHead(303, { 'Location': '/' });
         res.end();
       } catch (error) {
@@ -109,7 +110,7 @@ server.on("request", async function (req, res) {
         res.end('Server error');
       }
     })
-  } else {
+  } else { // 一致するルーティングが存在しない場合
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Page not found');
     return;
