@@ -24,7 +24,7 @@ const fetchNameList = (async()=>{
       console.error("Error fetching data:", error);
   }
 }) 
-
+// 削除する関数
 const deleteVoteData = (async(url)=>{
   try {
     const response = await fetch("http://127.0.0.1:8080/", {
@@ -45,7 +45,7 @@ const deleteVoteData = (async(url)=>{
   }
 })
 
-// idを削除する関数
+// 更新する関数
 const updateVoteData = (async(url, updatedKeyValue)=>{
   try {
     const response = await fetch("http://127.0.0.1:8080/", {
@@ -57,7 +57,7 @@ const updateVoteData = (async(url, updatedKeyValue)=>{
     });
 
     if (response.ok) {
-      // window.location.href = '/'; 
+      window.location.href = '/'; 
     } else {
       console.error("Failed to delete item");
     }
@@ -67,15 +67,16 @@ const updateVoteData = (async(url, updatedKeyValue)=>{
 })
 
 
-
+// 一覧部分の作成
 const createIndex =(()=>{
   let table_index = document.getElementById("index")
   let text = "";
   let i=0;
+  console.log(voteData)
   if(!voteData){
     return false;
   }
-  Object.keys(voteData).forEach((url)=>{
+  Object.keys(voteData).sort().forEach((url)=>{
     const data = voteData[url]
     text += `
     <tr>
@@ -104,40 +105,44 @@ const createIndex =(()=>{
 })
 
 const setNameListAsOption =(()=>{
-  const name_container = document.getElementById("name_container")
+  const select = document.getElementById("select_name")
   let options = ""; 
+  // 名前とその他の選択肢の追加
   nameList.forEach((name)=>{
     options += `<option value=${name}>${name}</option>`
   })
-  name_container.innerHTML += `<select name="name" id="select_name">
-  ${options}
-    <option value="other">その他</option>
-  </select>
-  <input type="text" id="other-input" placeholder="Enter your choice" style="display:none; margin-top:10px;">
+  select.innerHTML += `
+    ${options}
+    <option value="その他">その他</option>
   `
-  // name_container.insertAdjacentHTML("afterend", otherInput);
-  const showInput=(() => {
-    select_name.style.display = "none"; // selectを隠す
-    otherInput.style.display = "inline"; // inputを表示
-    otherInput.focus(); // 入力フィールドにフォーカス
-  })
-
-
   const select_name = document.getElementById("select_name")
-  const otherInput = document.getElementById("other-input")
+  const thNewName = document.getElementById("th-newName")
+  const thSlackId = document.getElementById("th-slackId")
+  const tdNewName = document.getElementById("td-newName")
+  const tdSlackId = document.getElementById("td-slackId")
   select_name.addEventListener("change", ()=>{
-    if (select_name.value === "other") {
-      // otherInput.style.display = "block"; // "その他"が選ばれたら表示
-      select_name.addEventListener("dblclick", showInput);
+    if (select_name.value === "その他") {
+      // テーブルの要素として表示する
+      thNewName.style.display = "table-cell";
+      thSlackId.style.display = "table-cell";
+      tdNewName.style.display = "table-cell";
+      tdSlackId.style.display = "table-cell";
+      // 入力を必須とする
+      tdNewName.setAttribute('required', '');
+      tdSlackId.setAttribute('required', '');
     } else {
-      otherInput.style.display = "none";
-      select_name.style.display = "inline";
-      otherInput.value = ""; // 入力欄をリセット
-      select_name.removeEventListener("dblclick", showInput); 
-      // otherInput.style.display = "none"; // 他の選択肢なら非表示
-      // otherInput.value = ""; // 入力欄をリセット
+      // 非表示にする
+      thNewName.style.display = "none";
+      thSlackId.style.display = "none";
+      tdNewName.style.display = "none";
+      tdSlackId.style.display = "none";
+      // 入力必須のままだとエラーになるので入力必須を解除する
+      tdNewName.removeAttribute('required');
+      tdSlackId.removeAttribute('required');
     }
-});
+  });
+
+
 })
 
 const main =(async ()=>{
@@ -147,8 +152,7 @@ const main =(async ()=>{
   setNameListAsOption();
 })
 
-
-
+console.log(new Date())
 main();
 
 

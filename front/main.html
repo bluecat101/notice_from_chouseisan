@@ -11,33 +11,39 @@
     <title>調整さんの通知管理サイト</title>
 </head>
 <body>
+  <!-- 追加するフォーム -->
   <table>
     <thead>
       <tr>
-      <td>URL</td>
-      <td>期限</td>
-      <td>通知ON</td>
-      <td>深夜の通知ON</td>
-      <td>通知の送り先</td>
-      <td>送り先のslack_id(新規の場合のみ)</td>
-      <td></td>
+        <th>URL</th>
+        <th>期限</th>
+        <th>通知ON</th>
+        <th>深夜の通知ON</th>
+        <th>通知の送り先</th>
+        <th id="th-newName" style="display:none;">送信者の名前</th>
+        <th id="th-slackId" style="display:none;">送り先のslack_id(新規の場合のみ)</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <form action="/front/submit" method="post" class="form-example">
+        <form action="/" method="post" class="form-example">
         <td><input type="text" id="url" name="url" required size="40" placeholder="https://chouseisan.com/..." value="test"/></td>
         <td><input type="date" id="period" name="period" required value="2200-02-22"/></td>
         <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
         <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
-        <td><div id="name_container"></div></td>
-        <td><input type="text" id="name" name="name" required size="10" placeholder="XXXXXXXX" value="xxxxx"/></td>
+        <td><div id="name_container">
+          <select name="name" id="select_name">
+          </select>
+        </div></td>
+        <td><input type="text" id="td-newName" name="newName" size="10" placeholder="山田" style="display:none;"/></td>
+        <td><input type="text" id="td-slackId" name="slackId" size="10" placeholder="XXXXXXXX" style="display:none;"/></td>
         <td><input type="submit" value="登録"></td>
         </form>
         </tr>  
     </tbody>
   </table>
-
+<!-- 一覧 -->
   <table id="index">
     <thead>
       <tr>
