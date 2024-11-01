@@ -10,7 +10,7 @@ NAME_TO_SLACK_ID_FILE = "name_to_slack_id.yml"
 ### voteData.yml ###
 
 # periodの形式はyyyy-mm-ddとする
-# atgsにはname,slack_idが入る
+# argsにはname,slack_idが入る
 def create_vote_data(url, period, send_notification = True, send_notification_at_night = False,name = None):
   if url is None or period is None or name is None:
     return

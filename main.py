@@ -40,7 +40,7 @@ def analyze_vote_table(soup=""):
   match = re.search(r"window\.Chouseisan\s*=\s*(\{.*?\});", script_content, re.DOTALL)
   return json.loads(match.group(1))
 
-def comfirm_vote_data(url="", vote_data={}):
+def confirm_vote_data(url="", vote_data={}):
   ### 投票ページの内容を取得 ###
   html = get_url_data(url)
   html_soup = BeautifulSoup(html, 'lxml') # htmlコンテンツをid等で解析しやすいように変換
