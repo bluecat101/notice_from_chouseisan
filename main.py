@@ -9,9 +9,9 @@ import config
 import database_utils
 
 # slack_idはないときもある
-def create_vote_deta(url, period, send_notification = True, send_notification_at_night = False, name = None, slack_id=None):
-  # 作成できたらTrue, 作成できなかったらFlase(urlがすでにあった場合にもFlase)
-  if database_utils.create_vote_deta(url, period, send_notification, send_notification_at_night, name):
+def create_vote_data(url, period, send_notification = True, send_notification_at_night = False, name = None, slack_id=None):
+  # 作成できたらTrue, 作成できなかったらFalse(urlがすでにあった場合にもFalse)
+  if database_utils.create_vote_data(url, period, send_notification, send_notification_at_night, name):
     # name_list.ymlに送信先の人が初めての人ならばslack_idを参照するkeyを追加する
     slack_member_id_key = database_utils.convert_name_to_slack_member_id_key(name)
     # nameを追加したならTrue
@@ -69,7 +69,7 @@ def check_period():
   for url, value in vote_data.items():
     today = datetime.date.today()
     if value["period"] < today:
-      database_utils.delete_vote_deta(url)
+      database_utils.delete_vote_data(url)
   
 
 # routeingの役割
@@ -83,7 +83,7 @@ if __name__ == "__main__":
   if args_len == 1: # 投票に更新があるかを確認する
     vote_data = database_utils.get_vote_data()
     for url in vote_data.keys():
-      comfirm_vote_data(url, vote_data[url])
+      confirm_vote_data(url, vote_data[url])
   else:
     if args[1] == "get_name_list" and args_len == 2:
       print(list(database_utils.get_name_to_slack_id_data().keys()))
@@ -92,10 +92,11 @@ if __name__ == "__main__":
     elif args[1] == "update_vote_data" and args_len == 4:
       database_utils.update_vote_data(args[2], json.loads(args[3]))
     elif args[1] == "delete_vote_data" and args_len == 3:
-      database_utils.delete_vote_deta(args[2])
-    elif args[1] == "create_vote_data" and (args_len == 6 or args_len == 7):
-      create_vote_deta(args[2], args[3], args[4], args[5], *args[6:])
+      database_utils.delete_vote_data(args[2])
+    elif args[1] == "create_vote_data" and (args_len == 7 or args_len == 8):
+      create_vote_data(args[2], args[3], args[4], args[5], *args[6:])
     else: 
+      # print(args_len,args)
       exit("引数を確認してください。")  
     
     

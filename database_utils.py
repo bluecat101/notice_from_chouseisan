@@ -11,7 +11,7 @@ NAME_TO_SLACK_ID_FILE = "name_to_slack_id.yml"
 
 # periodの形式はyyyy-mm-ddとする
 # atgsにはname,slack_idが入る
-def create_vote_deta(url, period, send_notification = True, send_notification_at_night = False,name = None):
+def create_vote_data(url, period, send_notification = True, send_notification_at_night = False,name = None):
   if url is None or period is None or name is None:
     return
   if type(period) is str: # 型変換
@@ -53,7 +53,7 @@ def update_vote_data(url=None, args={}): # argsは辞書型
     yaml.dump(vote_data, yml, encoding='utf-8', allow_unicode=True)
   return True
 
-def delete_vote_deta(url=None):
+def delete_vote_data(url=None):
   if url is None:
     return False
   vote_data = get_vote_data()
