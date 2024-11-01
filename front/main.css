@@ -48,3 +48,23 @@
   height: 35px;
   margin: auto;
 }
+
+#title{
+  text-align: center;
+}
+
+.container {
+    margin: 0 auto; /* 中央寄せ */
+    max-width: 800px; /* 最大幅を設定（必要に応じて調整） */
+}
+
+.title {
+    margin: 0; /* デフォルトのマージンをリセット */
+    text-align: left; /* 左揃え */
+}
+
+.data-table {
+    width: 100%; /* テーブルの幅を100%に設定 */
+    border: 1;
+    margin-top: 20px; /* タイトルとの間にスペースを追加 */
+}

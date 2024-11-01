@@ -10,41 +10,46 @@
     <title>調整さんの通知管理サイト</title>
 </head>
 <body>
-  <!-- 追加するフォーム -->
-  <table>
-    <thead>
-      <tr>
-        <th>URL</th>
-        <th>期限</th>
-        <th>通知ON</th>
-        <th>深夜の通知ON</th>
-        <th>通知の送り先</th>
-        <th id="th-newName" style="display:none;">送信者の名前</th>
-        <th id="th-slackId" style="display:none;">送り先のslack_id(新規の場合のみ)</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <form class="form-example" id="from">
-          <td><input type="text" id="url" name="url" required size="40" placeholder="https://chouseisan.com/..." value="test"/></td>
-          <td><input type="date" id="period" name="period" required value="2200-02-22"/></td>
-          <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
-          <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
-          <td><div id="name_container">
-            <select name="name" id="select_name">
-            </select>
-          </div></td>
-          <td><input type="text" id="td-newName" name="newName" size="10" placeholder="山田" style="display:none;"/></td>
-          <td><input type="text" id="td-slackId" name="slackId" size="10" placeholder="XXXXXXXX" style="display:none;"/></td>
-          <!-- <td><input type="submit" value="登録" id="submit"></td> -->
-          <td><button type="button" id="submit">登録</button></td>
-        </form>
-        </tr>  
-    </tbody>
-  </table>
+  <h1 id="title">調整さんの通知管理サイト</h1>
+  <div class="container">
+    <h2 class="title">新規作成</h2>
+    <!-- 追加するフォーム -->
+    <table  class="data-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>期限</th>
+          <th>通知ON</th>
+          <th>深夜の通知ON</th>
+          <th>通知の送り先</th>
+          <th id="th-newName" style="display:none;">送信者の名前</th>
+          <th id="th-slackId" style="display:none;">送り先のslack_id(新規の場合のみ)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <form class="form-example" id="from">
+            <td><input type="text" id="url" name="url" required size="40" placeholder="https://chouseisan.com/..."/></td>
+            <td><input type="date" id="period" name="period" required/></td>
+            <td><div class="toggle_button"><input id="notice" name="notice" class="toggle_input" type='checkbox' checked/><label for="notice" class="toggle_label"></div></td>
+            <td><div class="toggle_button"><input id="notice-at-night" name="notice-at-night" class="toggle_input" type='checkbox' /><label for="notice-at-night" class="toggle_label"></div></td>
+            <td><div id="name_container">
+              <select name="name" id="select_name">
+              </select>
+            </div></td>
+            <td id="td-newName" style="display:none;"><input type="text"  name="newName" size="10" placeholder="山田"/></td>
+            <td id="td-slackId" style="display:none;"><input type="text"  name="slackId" size="10" placeholder="XXXXXXXX" /></td>
+            <td><button type="button" id="submit">登録</button></td>
+          </form>
+          </tr>  
+      </tbody>
+    </table>
+  </div>
 <!-- 一覧 -->
-  <table id="index">
+<div class="container">
+  <h1>現在登録されている投票の一覧</h1>
+  <table  align="center" id="index">
     <thead>
       <tr>
       <td>URL</td>
@@ -56,5 +61,6 @@
     </thead>
     <tbody></tbody>
   </table>
+</div>
 </body>
 </html>
