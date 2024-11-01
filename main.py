@@ -10,8 +10,16 @@ import database_utils
 
 # slack_idはないときもある
 def create_vote_data(url, period, send_notification = True, send_notification_at_night = False, name = None, slack_id=None):
+  try:
+    # urlが有効かを確認し、既に登録されている人数を取得する
+    html_soup = get_page_content(url)
+    voted_num = int(html_soup.find(id="answerCnt").get_text())  
+  except:
+    exit("URLが無効です。")
+  
+  
   # 作成できたらTrue, 作成できなかったらFalse(urlがすでにあった場合にもFalse)
-  if database_utils.create_vote_data(url, period, send_notification, send_notification_at_night, name):
+  if database_utils.create_vote_data(url, period, voted_num, send_notification, send_notification_at_night, name):
     # name_list.ymlに送信先の人が初めての人ならばslack_idを参照するkeyを追加する
     slack_member_id_key = database_utils.convert_name_to_slack_member_id_key(name)
     # nameを追加したならTrue
@@ -32,7 +40,7 @@ def get_url_data(url=""):
     with urllib.request.urlopen(url) as response:
       return response.read().decode('utf-8')
   except urllib.error.URLError as e:
-     print(e.reason)
+      print(e.reason)
 
 def analyze_vote_table(soup=""):
   script_tag = soup.find('script', string=re.compile(r"window\.Chouseisan\s*=")) # 
@@ -40,16 +48,20 @@ def analyze_vote_table(soup=""):
   match = re.search(r"window\.Chouseisan\s*=\s*(\{.*?\});", script_content, re.DOTALL)
   return json.loads(match.group(1))
 
+def get_page_content(url):
+  html = get_url_data(url)
+  html_soup = BeautifulSoup(html, 'lxml')
+  return html_soup
+
 def confirm_vote_data(url="", vote_data={}):
   ### 投票ページの内容を取得 ###
-  html = get_url_data(url)
-  html_soup = BeautifulSoup(html, 'lxml') # htmlコンテンツをid等で解析しやすいように変換
+  html_soup = get_page_content(url)
   # 投票人数を取得
   voted_num = int(html_soup.find(id="answerCnt").get_text())
   new_voted_num = voted_num - vote_data["voted_num"]
   # 新規の投票者がいるかを確認
   if new_voted_num < 1:
-    print("更新分はありません")
+    print("新規の投票者はいません。")
     return
   # 投票者を取得(tableで埋め込めれている)
   table_data = analyze_vote_table(html_soup) # 辞書型となる
@@ -105,7 +117,6 @@ if __name__ == "__main__":
         args[5] = True
       create_vote_data(args[2], args[3], args[4], args[5], *args[6:])
     else: 
-      # print(args_len,args)
       exit("引数を確認してください。")  
     
     
