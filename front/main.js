@@ -78,9 +78,10 @@ const createIndex =(()=>{
   }
   Object.keys(voteData).sort().forEach((url)=>{
     const data = voteData[url]
+    const urlId = url.replace("https://chouseisan.com/s?h=","")
     text += `
     <tr>
-      <td>${url}</td>
+      <td><a href="${url}">${urlId}</a></td>
       <td>${data["period"]}</td>
       <td><div class="toggle_button"><input id="notice_${i}" class="toggle_input" type='checkbox' ${data["is_send_notification"]?"checked":""} /><label for="toggle" class="toggle_label"></div></td>
       <td><div class="toggle_button"><input id="notice_at_night_${i}" class="toggle_input" type='checkbox' ${data["is_send_notification_at_night"]?"checked":""} /><label for="toggle" class="toggle_label"></div></td>
