@@ -72,7 +72,6 @@ const createIndex =(()=>{
   let table_index = document.getElementById("index")
   let text = "";
   let i=0;
-  console.log(voteData)
   if(!voteData){
     return false;
   }
@@ -97,8 +96,8 @@ const createIndex =(()=>{
   Object.keys(voteData).forEach((url)=>{
     const notice_i = document.getElementById(`notice_${i}`);
     const notice_at_night_i = document.getElementById(`notice_at_night_${i}`);
-    notice_i.addEventListener("click",()=>{updateVoteData(url, {"is_send_notification": notice_i.classList.toggle("active")})})
-    notice_at_night_i.addEventListener("click",()=>{updateVoteData(url, {"is_send_notification_at_night": notice_at_night_i.classList.toggle("active")})})
+    notice_i.addEventListener("click",()=>{updateVoteData(url, {"is_send_notification": notice_i.checked})})
+    notice_at_night_i.addEventListener("click",()=>{updateVoteData(url, {"is_send_notification_at_night": notice_at_night_i.checked})})
     document.getElementById(`delete_${i}`).addEventListener("click",()=>{deleteVoteData(url)})
     i++;
   })
@@ -153,11 +152,4 @@ const main =(async ()=>{
   setNameListAsOption();
 })
 
-console.log(new Date())
 main();
-
-
-
-
-// 
-

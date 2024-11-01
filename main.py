@@ -78,6 +78,7 @@ if __name__ == "__main__":
   # 引数が16進数の時があるためエンコードしてデコードする
   args_bytes = " ".join(args).encode('utf-8')
   args = bytes(args_bytes).decode("utf-8").split(" ")
+  # args = list(map(lambda arg: arg.replace("false", False).replace("true", True), args))
   args_len = len(args)
   check_period()
   if args_len == 1: # 投票に更新があるかを確認する
@@ -90,10 +91,19 @@ if __name__ == "__main__":
     elif args[1] == "get_vote_data" and args_len == 2:
       print(to_json(database_utils.get_vote_data()))
     elif args[1] == "update_vote_data" and args_len == 4:
+      # exit(json.loads(args[3]))
       database_utils.update_vote_data(args[2], json.loads(args[3]))
     elif args[1] == "delete_vote_data" and args_len == 3:
       database_utils.delete_vote_data(args[2])
     elif args[1] == "create_vote_data" and (args_len == 7 or args_len == 8):
+      if args[4] == "false":
+        args[4] = False
+      elif args[4] == "true":
+        args[4] = True
+      if args[5] == "false":
+        args[5] = False
+      elif args[5] == "true":
+        args[5] = True
       create_vote_data(args[2], args[3], args[4], args[5], *args[6:])
     else: 
       # print(args_len,args)
