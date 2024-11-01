@@ -5,7 +5,7 @@ const decodeData = ((data)=>{
   return decoder.decode(data);
 })
 // 投票内容を確認する
-const getVoteData = (async ()=>{
+const getVoteData = (()=>{
   // Promiseを使わないと処理中状態でreturnすることになるため使用する
   return new Promise(async (resolve) => {
     const pythonProcess = spawn('python', ['main.py', "get_vote_data"]); // 作成
@@ -38,21 +38,51 @@ const getNameList = (async ()=>{
   })
 })
 
-const updateData =(async (url, keyValueJson)=>{
-  const pythonProcess = await spawn('python', ['main.py', "update_vote_data", url, JSON.stringify(keyValueJson)]); // 作成
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(decodeData(data));
-  });
+const updateData =((url, keyValueJson)=>{
+  return new Promise(async (resolve) => {
+    const pythonProcess = spawn('python', ['main.py', "update_vote_data", url, JSON.stringify(keyValueJson)]); // 作成
+    pythonProcess.on('close', (code) => {
+      resolve("")
+    });
+    
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(decodeData(data));
+    });
+  })
 })
 
 const deleteData =(async (url)=>{
-  const pythonProcess = await spawn('python', ['main.py', "delete_vote_data", url]); // 作成
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(decodeData(data));
-  });
+  return new Promise(async (resolve) => {
+    const pythonProcess = spawn('python', ['main.py', "delete_vote_data", url]); // 作成
+    // 処理が終わったらresolveする
+    pythonProcess.on('close', (code) => {
+      resolve("")
+    });
+    
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(decodeData(data));
+    });
+  })
 })
 
-const createData = (async (url, period, notice, noticeAtNight, name, slackID)=>{
-  const pythonProcess = await spawn('python', ['main.py', url, period, notice, noticeAtNight, name, slackID]); // 作成
+const createData = ((url, period, notice, noticeAtNight, name, slackID)=>{
+  return new Promise(async (resolve) => {
+    let pythonProcess;
+    if(slackID === undefined){
+      pythonProcess = spawn('python', ['main.py', "create_vote_data", url, period, notice, noticeAtNight, name]); // 作成
+    }else{
+      pythonProcess = spawn('python', ['main.py', "create_vote_data", url, period, notice, noticeAtNight, name, slackID]); // 作成
+    }
+    // 処理が終わったらresolveする
+    pythonProcess.on('close', (code) => {
+      resolve("")
+    });
+    
+    // エラーがあった際に表示する
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(decodeData(data));
+      resolve("")
+    });
+  })
 })
 module.exports = {getNameList, getVoteData, updateData, deleteData, createData};
