@@ -1,15 +1,14 @@
 const http = require("http");
 const fs = require('fs');
 const path = require('path');
-const querystring = require('querystring');
+// const querystring = require('querystring');
 const api = require('./api.js');
 
 
 const server = http.createServer();
 
-let filePath;
 server.on("request", async function (req, res) {
-  filePath = "";
+  let filePath = "";
   if (req.method === 'GET' && req.url === '/') {
     filePath = path.join(__dirname, 'front/main.html');
   } else if (req.method === 'GET' && req.url === '/front/main.css') {
