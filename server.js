@@ -97,14 +97,6 @@ server.on("request", async function (req, res) {
         const newName = parsedBody.newName;
         const slackId = parsedBody.slackId;
 
-        const voteData = await api.getVoteData();
-        if(Object.keys(voteData).includes(url)){
-          console.log("すでに登録されています")
-          res.writeHead(409, { 'Location': '/' });
-          res.end("すでに登録されています");
-          return;
-        }
-
         if(name=="その他"){
           await api.createData(url, period, notice, noticeAtNight, newName, slackId);
         }else{
@@ -115,10 +107,8 @@ server.on("request", async function (req, res) {
         res.writeHead(303, { 'Location': '/' });
         res.end();
       } catch (error) {
-        // エラーハンドリング
-        console.error("Error parsing JSON or deleting data:", error);
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Server error');
+        res.writeHead(409, { 'Location': '/' });
+        res.end(error.message);
       }
     })
   } else { // 一致するルーティングが存在しない場合

@@ -89,11 +89,12 @@ const createVoteData = (async()=>{
 
     if (response.ok) {
       window.location.href = '/'; 
-    } else {
-      alert("既に登録されています。");
+    }else{
+      const errorText = await response.text();
+      throw new Error(errorText);
     }
   } catch (error) {
-    console.error("Error:", error);
+    alert(error);
   }
 })
 

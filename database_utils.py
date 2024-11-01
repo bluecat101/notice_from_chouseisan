@@ -11,7 +11,7 @@ NAME_TO_SLACK_ID_FILE = "name_to_slack_id.yml"
 
 # periodの形式はyyyy-mm-ddとする
 # argsにはname,slack_idが入る
-def create_vote_data(url, period, send_notification = True, send_notification_at_night = False,name = None):
+def create_vote_data(url, period, voted_num = 0, send_notification = True, send_notification_at_night = False,name = None):
   if url is None or period is None or name is None:
     return
   if type(period) is str: # 型変換
@@ -21,12 +21,11 @@ def create_vote_data(url, period, send_notification = True, send_notification_at
   
   vote_data = get_vote_data()
   if url in vote_data:
-    print("既に存在します。")
-    return False
+    exit("既に存在します。")
   # データの作成
   data = {url:{
     'period': period, 
-    'voted_num': 0,
+    'voted_num': voted_num,
     'is_send_notification': send_notification,
     'is_send_notification_at_night': send_notification_at_night,
     'to': name

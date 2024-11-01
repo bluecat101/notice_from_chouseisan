@@ -1,3 +1,4 @@
+const { rejects } = require('assert');
 const { spawn } = require('child_process');
 
 const decodeData = ((data)=>{
@@ -66,7 +67,7 @@ const deleteData =(async (url)=>{
 })
 
 const createData = ((url, period, notice, noticeAtNight, name, slackID)=>{
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve,reject) => {
     let pythonProcess;
     if(slackID === undefined){
       pythonProcess = spawn('python', ['main.py', "create_vote_data", url, period, notice, noticeAtNight, name]); // 作成
@@ -81,7 +82,7 @@ const createData = ((url, period, notice, noticeAtNight, name, slackID)=>{
     // エラーがあった際に表示する
     pythonProcess.stderr.on('data', (data) => {
       console.error(decodeData(data));
-      resolve("")
+      reject(new Error(decodeData(data)));
     });
   })
 })
